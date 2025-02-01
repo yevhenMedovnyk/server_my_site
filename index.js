@@ -4,14 +4,62 @@ const cors = require('cors');
 const app = express();
 app.use(cors());
 require("dotenv").config(); 
-app.use(express.urlencoded({ limit: '15mb', extended: true }));
-app.use(express.json({ limit: '15mb' }));
+app.use(express.urlencoded({ limit: '100mb', extended: true }));
+app.use(express.json({ limit: '100mb' }));
 
 const PORT = process.env.PORT;
 
 
 const Image = require('./model/image.model.js');
 const Gallery_folder = require('./model/gallery_folder.model.js');
+
+
+app.get('/', (req, res) => {
+	Gallery_folder.find()
+		.then(folders => res.send(folders))
+		.catch(err => res.status(400).json('Error: ' + err));
+});
+
+app.get('/folder', async (req, res) => {
+    const folderId = req.query.folderId;
+
+    try {
+        if (!folderId) {
+            return res.status(400).json({ message: "folderId is required" });
+        }
+
+        const folder = await Gallery_folder.find({ id: folderId });
+
+        if (!folder) {
+            return res.status(404).json({ message: "Folder not found" });
+        }
+
+        res.json(folder);
+    } catch (error) {
+        res.status(500).json({ message: "Server error: " + error.message });
+    }
+});
+
+app.post('/create-folder', async (req, res) => { 
+	const body = req.body;
+
+	try {
+		const newFolder = await Gallery_folder.create(body);
+		res.status(201).json(newFolder);
+	} catch (error) {
+		res.status(400).json({message : error.message});
+	}
+})
+
+app.post('/delete-folder', async (req, res) => {
+	const folderId = req.query.folderId;
+	try {
+		const deletedFolder = await Gallery_folder.findByIdAndDelete(folderId );
+		res.status(200).json(deletedFolder);
+	} catch (error) {
+		res.status(400).json({message : error.message});
+	}
+})
 
 app.get('/gallery', (req, res) => {
 	const albumId = req.query.albumId;
@@ -21,13 +69,7 @@ app.get('/gallery', (req, res) => {
 		.catch(err => res.status(400).json('Error: ' + err));
 });
 
-app.get('/', (req, res) => {
-	Gallery_folder.find()
-		.then(folders => res.send(folders))
-		.catch(err => res.status(400).json('Error: ' + err));
-});
-
-app.post('/gallery/uploads', async (req, res) => { 
+app.post('/gallery/upload-image', async (req, res) => { 
 	const body = req.body;
 
 	try {
@@ -37,9 +79,6 @@ app.post('/gallery/uploads', async (req, res) => {
 		res.status(400).json({message : error.message});
 	}
 })
-
-
-
 
 
 mongoose.connect(process.env.MONGO_CONNECTION_STRING)
