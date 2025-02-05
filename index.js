@@ -28,7 +28,7 @@ app.get('/folder', async (req, res) => {
             return res.status(400).json({ message: "folderId is required" });
         }
 
-        const folder = await Gallery_folder.find({ id: folderId });
+        const folder = await Gallery_folder.findById(folderId);
 
         if (!folder) {
             return res.status(404).json({ message: "Folder not found" });
@@ -50,6 +50,35 @@ app.post('/create-folder', async (req, res) => {
 		res.status(400).json({message : error.message});
 	}
 })
+
+app.put('/update-folder', async (req, res) => {
+    const { folderId, name, link, cover_img } = req.body;
+
+    try {
+        if (!folderId) {
+            return res.status(400).json({ message: "folderId is required" });
+        }
+
+        const folder = await Gallery_folder.findById(folderId);
+
+        if (!folder) {
+            return res.status(404).json({ message: "Folder not found" });
+        }
+
+        // Оновлення даних альбому
+        folder.name = name || folder.name;
+        folder.link = link || folder.link;
+        folder.cover_img = cover_img || folder.cover_img;
+
+        await folder.save();
+
+        res.json(folder);
+    } catch (error) {
+        res.status(500).json({ message: "Server error: " + error.message });
+    }
+});
+
+
 
 app.post('/delete-folder', async (req, res) => {
 	const folderId = req.query.folderId;
@@ -75,6 +104,16 @@ app.post('/gallery/upload-image', async (req, res) => {
 	try {
 		const newImage = await Image.create(body);
 		res.status(201).json({message : 'Image uploaded'});
+	} catch (error) {
+		res.status(400).json({message : error.message});
+	}
+})
+
+app.delete('/gallery/delete-image', async (req, res) => {
+	const imageId = req.query.imageId;
+	try {
+		const deletedImage = await Image.findByIdAndDelete(imageId );
+		res.status(200).json({message : 'Image deleted'});
 	} catch (error) {
 		res.status(400).json({message : error.message});
 	}
