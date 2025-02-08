@@ -2,7 +2,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const app = express();
+
 app.use(cors());
+
 require("dotenv").config(); 
 app.use(express.urlencoded({ limit: '100mb', extended: true }));
 app.use(express.json({ limit: '100mb' }));
@@ -12,6 +14,7 @@ const PORT = process.env.PORT;
 
 const Image = require('./model/image.model.js');
 const Gallery_folder = require('./model/gallery_folder.model.js');
+const User = require('./model/user.model.js');
 
 
 app.get('/', (req, res) => {
@@ -114,6 +117,27 @@ app.delete('/gallery/delete-image', async (req, res) => {
 	try {
 		const deletedImage = await Image.findByIdAndDelete(imageId );
 		res.status(200).json({message : 'Image deleted'});
+	} catch (error) {
+		res.status(400).json({message : error.message});
+	}
+})
+
+app.get('/user', async(req, res) => {
+	const uid = req.query.uid;
+
+	try {
+		const user = await User.findOne({ uid: uid });
+		res.json(user);
+	} catch (error) {
+		res.status(500).json({ message: "Server error: " + error.message });
+	}
+})
+
+app.post('/user-create', async(req, res) => {
+	const body = req.body;
+	try {
+		const user = await User.create(body);
+		res.status(201).json(user);
 	} catch (error) {
 		res.status(400).json({message : error.message});
 	}
