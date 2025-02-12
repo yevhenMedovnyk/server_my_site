@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const gallery_folderSchema = new Schema({
+const image_albumSchema = new Schema({
 	name: {
 		type: String,
 		required: true
@@ -15,4 +15,4 @@ const gallery_folderSchema = new Schema({
 		required: true
 	}
 });
-module.exports = mongoose.model('Gallery_folder', gallery_folderSchema);
+module.exports = mongoose.model('image_album', image_albumSchema);

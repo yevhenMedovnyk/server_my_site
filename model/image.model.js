@@ -10,8 +10,16 @@ const imageSchema = new Schema({
 		type: String,
 		required: true
 	},
-	folder_id: {
+	album_id: {
 		type: String,
+		required: true
+	},
+	width: {
+		type: Number,
+		required: true
+	},
+	height: {
+		type: Number,
 		required: true
 	},
 	description: {
