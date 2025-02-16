@@ -2,10 +2,11 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const storeItemSchema = new Schema({
-	id: { type: Number, required: true },
+	code_product: { type: Number, required: true },
 	name: { type: String, required: true },
-	img: [{ type: Schema.Types.ObjectId, ref: 'ImageModel', required: true }],
+	imgs: [{ img: String, name: String, width: Number, height: Number }],
 	price: { type: Number, required: true },
+	quantity: { type: Number, required: false },
 	isLimited: { type: Boolean, required: true },
 	paper_info: { type: String, required: true },
 	size_with_borders: { type: String, required: true },
@@ -14,4 +15,4 @@ const storeItemSchema = new Schema({
 	note: { type: String, required: true },
 });
 
-module.exports = mongoose.model('StoreItem', storeItemSchema);
+module.exports = mongoose.model('store_item', storeItemSchema);
