@@ -10,7 +10,7 @@ const image_albumSchema = new Schema({
 		type: String,
 		required: true
 	},
-	link: {
+	category: {
 		type: String,
 		required: true
 	}

@@ -1,4 +1,5 @@
 const Order = require('../model/order.model.js'); // Імпорт моделі замовлення
+const sendMail = require('./sendMail.js');
 
 const updateOrderStatus = async (orderRef, status) => {
     try {
@@ -9,8 +10,20 @@ const updateOrderStatus = async (orderRef, status) => {
             return { success: false, message: "Order not found" };
         }
 
-        order.status = status; // Оновлення статусу
-        await order.save(); // Збереження змін
+        order.generalStatus = status; // Оновлення статусу
+			await order.save(); // Збереження змін
+
+				if (status === 'success') { 
+					await sendMail({
+						emailTo: order.mainClientInfo.email,
+						name: order.mainClientInfo.first_name,
+						subject: 'Замовлення успішно прийняте',
+						templateName: 'orderSuccessMessage',
+						context: {
+							order
+						}
+				});
+			}
 
         console.log(`✅ Статус замовлення ${orderRef} оновлено до: ${status}`);
         return { success: true, message: "Order updated successfully" };
