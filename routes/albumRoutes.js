@@ -5,9 +5,14 @@ const Image_album = require('../model/image_album.model.js');
 
 // Отримати всі альбоми
 router.get('/', (req, res) => {
-  Image_album.find()
-    .then(albums => res.send(albums))
-    .catch(err => res.status(400).json('Error: ' + err));
+	const category = req.query.category;
+
+	if (category) {
+		Image_album.find({ category: category })
+			.then(albums => res.send(albums))
+			.catch(err => res.status(400).json('Error: ' + err));
+		return;
+	}
 });
 
 // Отримати конкретний альбом
@@ -45,7 +50,7 @@ router.post('/create-album', async (req, res) => {
 
 // Оновити альбом
 router.put('/update-album', async (req, res) => {
-  const { albumId, name, link, cover_img } = req.body;
+  const { albumId, name, category, cover_img } = req.body;
 
   try {
     if (!albumId) {
@@ -59,7 +64,7 @@ router.put('/update-album', async (req, res) => {
     }
 
     album.name = name || album.name;
-    album.link = link || album.link;
+    album.category = category || album.category;
     album.cover_img = cover_img || album.cover_img;
 
     await album.save();

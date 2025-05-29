@@ -35,9 +35,9 @@ router.post('/', async (req, res) => {
     "card"
   ],
   "dlv_pay_merchant": false,
-  "callback_url": "https://1cd2-2a02-2378-134e-c059-3803-2466-ac77-55f1.ngrok-free.app/checkout/callback",
-  "return_url": "http://localhost:5173",
-	"hold": true,
+  "callback_url": "https://4a44-37-73-24-228.ngrok-free.app/checkout/callback",
+	"return_url": "http://localhost:5173",
+	"hold": false,
 	"fl_recall": true
 		}
 		
@@ -91,60 +91,69 @@ router.get('/order-data', async (req, res) => {
 });
 
 
-router.post('/checkout/callback', async (req, res) => {
+router.post('/callback', async (req, res) => {
     try {
-        const signatureBase64 = req.headers['x-sign']; // Отримуємо підпис від MonoBank
-        if (!signatureBase64) {
-            return res.status(400).json({ message: "Missing X-Sign header" });
-				}
-			console.log("✅ Підпис отримано:", signatureBase64);
+      //  const signatureBase64 = req.headers['x-sign']; // Отримуємо підпис від MonoBank
+      //  if (!signatureBase64) {
+      //      return res.status(400).json({ message: "Missing X-Sign header" });
+			//	}
+			//console.log("✅ Підпис отримано:", signatureBase64);
 			
 
-        const body = JSON.stringify(req.body);
+      //  const body = JSON.stringify(req.body);
 
-        // 🔹 Отримуємо відкритий ключ від MonoBank
-        const response = await axios.get(MONO_CHECKOUT_URL + "signature/public/key", {
-            headers: { 'X-Token': MONO_SECRET }
-        });
+      //  // 🔹 Отримуємо відкритий ключ від MonoBank
+      //  const response = await axios.get(MONO_CHECKOUT_URL + "signature/public/key", {
+      //      headers: { 'X-Token': MONO_SECRET }
+      //  });
 
-        const publicKeyBase64 = response.data.key;
-        if (!publicKeyBase64) {
-            console.error("❌ Помилка: Не вдалося отримати публічний ключ!");
-            return res.status(500).json({ message: "Failed to retrieve public key" });
-				}
-			console.log("✅ Публічний ключ отримано:", publicKeyBase64);
+      //  const publicKeyBase64 = response.data.key;
+      //  if (!publicKeyBase64) {
+      //      console.error("❌ Помилка: Не вдалося отримати публічний ключ!");
+      //      return res.status(500).json({ message: "Failed to retrieve public key" });
+			//	}
+			//console.log("✅ Публічний ключ отримано:", publicKeyBase64);
 			
 
-        // 🔹 Перетворюємо підпис і ключ у Buffer
-        const signatureBuf = Buffer.from(signatureBase64, 'base64');
-        const publicKeyBuf = Buffer.from(publicKeyBase64, 'base64');
+      //  // 🔹 Перетворюємо підпис і ключ у Buffer
+      //  const signatureBuf = Buffer.from(signatureBase64, 'base64');
+      //  const publicKeyBuf = Buffer.from(publicKeyBase64, 'base64');
 
-        // 🔹 Перевіряємо підпис через ECDSA
-        const verify = crypto.createVerify('sha256');
-        verify.write(body);
-        verify.end();
+      //  // 🔹 Перевіряємо підпис через ECDSA
+      //  const verify = crypto.createVerify('sha256');
+      //  verify.write(body);
+      //  verify.end();
 
-        const isValid = verify.verify(publicKeyBuf, signatureBuf);
+      //  const isValid = verify.verify(publicKeyBuf, signatureBuf);
 
-        if (!isValid) {
-            console.error("❌ Помилка: Недійсний підпис!");
-            return res.status(401).json({ message: "Invalid signature" });
-        }
+      //  if (!isValid) {
+      //      console.error("❌ Помилка: Недійсний підпис!");
+      //      return res.status(401).json({ message: "Invalid signature" });
+      //  }
 
 			console.log("✅ Підпис валідний! Callback отримано:", req.body);
 
 			
-			const { orderId, generalStatus} = req.body;
-			const newOrder = await Order.create(req.body);
+			const { orderId, generalStatus } = req.body;
 			
-				
-				console.log(`🟡 order_ref: ${orderId}, status: ${generalStatus}`);
+			// 🔹 Перевіряємо, чи існує замовлення
+        const existingOrder = await Order.findOne({ orderId });
+
+        if (!existingOrder) {
+            await Order.create(req.body); // ✅ Створюємо нове замовлення тільки якщо його немає
+            console.log(`🟢 Створено нове замовлення ${orderId}`);
+        } else {
+            console.log(`🔹 Замовлення ${orderId} вже існує.`);
+        }
+
+        console.log(`🟡 order_ref: ${orderId}, status: ${generalStatus}`);
+        
         // 🔹 Оновлення статусу замовлення
         try {
             switch (generalStatus) {
                 case "success":
                     console.log(`✅ Замовлення ${orderId} успішно оплачене!`);
-                    await updateOrderStatus(orderId, 'paid');
+                    await updateOrderStatus(orderId, 'success');
                     break;
                 case "fail":
                     console.log(`❌ Замовлення ${orderId} НЕ оплачене.`);
