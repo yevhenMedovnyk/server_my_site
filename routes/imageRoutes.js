@@ -65,4 +65,22 @@ router.delete('/delete-image', async (req, res) => {
   }
 });
 
+//Додати опис зображення
+router.post('/add-image-description', async (req, res) => {
+	const imageId = req.body.imageId;
+	const description = req.body.description;
+	
+	try {
+		const image = await Image.findById(imageId);
+		if (!image) {
+			return res.status(404).json({ message: "Image not found" });
+		}
+		image.description = description;
+		await image.save();
+		res.status(200).json({message : 'Image description added'});
+	} catch (error) {
+		res.status(400).json({message : error.message});
+	}
+});
+
 module.exports = router;
