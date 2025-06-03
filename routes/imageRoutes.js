@@ -1,6 +1,48 @@
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
+const cloudinary = require('../cloudinaryConfig');
 const Image = require('../model/image.model.js');
+const { getPublicIdFromUrl } = require('../utils/getPublicIdFromUrl.js');
+
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+
+//Завантажити зображення
+
+router.post('/upload-image', upload.array('images'), async (req, res) => {
+  const files = req.files;
+	const albumId = req.body.album_id;
+	const folderName = req.body.album_name;
+	
+
+  try {
+    const uploads = await Promise.all(
+      files.map(async (file) => {
+        const base64String = `data:${file.mimetype};base64,${file.buffer.toString('base64')}`;
+        const uploaded = await cloudinary.uploader.upload(base64String, {
+          folder: `albums/${folderName}`,
+        });
+
+        const image = new Image({
+          name: file.originalname,
+          img: uploaded.secure_url,
+          album_id: albumId,
+          width: uploaded.width,
+          height: uploaded.height,
+        });
+
+        return await image.save();
+      })
+    );
+
+    res.status(201).json({ message: 'Images uploaded', images: uploads });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 
 // Отримати всі зображення в альбомі
 router.get('/all-images-in-album', (req, res) => {
@@ -42,28 +84,41 @@ router.get('/image-by-id', async (req, res) => {
   }
 });
 
-// Завантажити нове зображення
-router.post('/upload-image', async (req, res) => { 
-  const body = req.body;
+//// Завантажити нове зображення
+//router.post('/upload-image', async (req, res) => { 
+//  const body = req.body;
 
-  try {
-    const newImage = await Image.create(body);
-    res.status(201).json({message : 'Image uploaded'});
-  } catch (error) {
-    res.status(400).json({message : error.message});
-  }
-});
+//  try {
+//    const newImage = await Image.create(body);
+//    res.status(201).json({message : 'Image uploaded'});
+//  } catch (error) {
+//    res.status(400).json({message : error.message});
+//  }
+//});
 
-// Видалити зображення
 router.delete('/delete-image', async (req, res) => {
   const imageId = req.query.imageId;
+
   try {
-    const deletedImage = await Image.findByIdAndDelete(imageId );
-    res.status(200).json({message : 'Image deleted'});
+    const image = await Image.findById(imageId);
+    if (!image) {
+      return res.status(404).json({ message: 'Image not found' });
+    }
+
+    const publicId = getPublicIdFromUrl(image.img);
+    if (!publicId) {
+      return res.status(400).json({ message: 'Could not extract public_id from URL' });
+    }
+
+    await cloudinary.uploader.destroy(publicId);
+    await Image.findByIdAndDelete(imageId);
+
+    res.status(200).json({ message: 'Image deleted from MongoDB and Cloudinary' });
   } catch (error) {
-    res.status(400).json({message : error.message});
+    res.status(400).json({ message: error.message });
   }
 });
+
 
 //Додати опис зображення
 router.post('/add-image-description', async (req, res) => {
