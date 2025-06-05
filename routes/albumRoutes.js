@@ -90,14 +90,10 @@ router.post('/delete-album', async (req, res) => {
 
     // Знайти всі зображення альбому
 		const images = await Image.find({album_id: albumId });
-	console.log(images);
-	
-		
 
     // Видалити з Cloudinary усі зображення альбому
     for (const img of images) {
 			const publicId = getPublicIdFromUrl(img.img);
-			console.log(publicId);
 			
       if (publicId) {
         await cloudinary.uploader.destroy(publicId);

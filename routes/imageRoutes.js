@@ -14,15 +14,13 @@ const upload = multer({ storage });
 router.post('/upload-image', upload.array('images'), async (req, res) => {
   const files = req.files;
 	const albumId = req.body.album_id;
-	const folderName = req.body.album_name;
-	
 
   try {
     const uploads = await Promise.all(
       files.map(async (file) => {
         const base64String = `data:${file.mimetype};base64,${file.buffer.toString('base64')}`;
         const uploaded = await cloudinary.uploader.upload(base64String, {
-          folder: `albums/${folderName}`,
+          folder: 'albums',
         });
 
         const image = new Image({
@@ -124,7 +122,6 @@ router.delete('/delete-image', async (req, res) => {
 router.post('/add-image-description', async (req, res) => {
 	const imageId = req.body.imageId;
 	const description = req.body.description;
-	
 	try {
 		const image = await Image.findById(imageId);
 		if (!image) {
