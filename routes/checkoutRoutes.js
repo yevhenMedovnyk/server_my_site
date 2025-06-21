@@ -35,8 +35,8 @@ router.post('/', async (req, res) => {
     "card"
   ],
   "dlv_pay_merchant": false,
-  "callback_url": "https://4a44-37-73-24-228.ngrok-free.app/checkout/callback",
-	"return_url": "http://localhost:5173",
+  "callback_url": "https://b5d0-46-96-80-14.ngrok-free.app/checkout/callback",
+	"return_url": "http://localhost:5173/order-status",
 	"hold": false,
 	"fl_recall": true
 		}
@@ -65,8 +65,11 @@ if (!MONO_SECRET) {
 }
 
 router.get('/order-data', async (req, res) => { 
+	console.log("🟡 Запит на отримання даних замовлення");
+	
   try {
-    const { order_ref } = req.query;
+		const { order_ref } = req.query;
+		
 
     if (!order_ref) {
       return res.status(400).json({ message: "Missing order_ref parameter" });
