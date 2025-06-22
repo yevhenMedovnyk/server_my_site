@@ -3,8 +3,14 @@ const Schema = mongoose.Schema;
 
 const image_albumSchema = new Schema({
 	name: {
-		type: String,
-		required: true
+		ua: {
+			type: String,
+			required: true
+		},
+		en: {
+			type: String,
+			required: true
+		}
 	},
 	cover_img: {
 		type: String,

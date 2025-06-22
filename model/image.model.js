@@ -23,8 +23,10 @@ const imageSchema = new Schema({
 		required: true
 	},
 	description: {
-		type: String,
-	},
+		ua: String,
+		en: String
+	}
+	
 });
 
 module.exports = mongoose.model('Image', imageSchema);

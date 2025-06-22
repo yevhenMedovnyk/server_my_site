@@ -1,68 +1,98 @@
-<style>
+ <style>
+		html, body {
+  	margin: 0;
+  	padding: 0;
+ 	 	background-color: #f4f4f4;
+  	font-family: Arial, sans-serif;
+  	width: 100%;
+  	box-sizing: border-box;
+}
+
 	body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            max-width: 600px;
-            margin: 20px auto;
-            background: #ffffff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        .header {
-            background: #4CAF50;
-            color: white;
-            text-align: center;
-            padding: 15px;
-            font-size: 20px;
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
-        }
-        .content {
-            padding: 20px;
-            color: #333;
-        }
-        .order-details {
-            margin-top: 15px;
-            padding: 10px;
-            background: #f9f9f9;
-            border-radius: 5px;
-        }
-        .footer {
-            text-align: center;
-            padding: 15px;
-            font-size: 14px;
-            color: #777;
-        }
-        .btn {
-            display: inline-block;
-            margin-top: 10px;
-            padding: 10px 20px;
-            color: white;
-            background: #4CAF50;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-        }
-        .btn:hover {
-            background: #45a049;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #4CAF50;
-            color: white;
-        }
-</style>
+  	display: flex;
+  	justify-content: center;
+  	padding: 1rem;
+	}
+		a{
+			text-decoration: none;
+      color: #777;
+
+		}
+    .container {
+      max-width: 600px;
+      margin: 20px auto;
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 1px 1px 6px 1px rgba(44, 63, 82, 0.42);
+			border: 1px solid #c4cad0;
+    }
+    .header {
+      background-color: #212121;
+			color: #fcfcfc;
+      text-align: center;
+      padding: 15px;
+      font-size: 20px;
+      border-radius: 8px;
+			margin-bottom: 0.8rem;
+    }
+    .content {
+      padding: 20px;
+      color: #333;
+    }
+    .order-details {
+      margin-top: 15px;
+      border-radius: 5px;
+    }
+    .footer {
+      text-align: center;
+      padding: 15px;
+      font-size: 14px;
+      color: #777;
+    }
+ 
+		.store-link {
+			display: inline-block;
+			color: #212121 !important;
+			text-decoration: none;
+			font-weight: bold;
+			margin-bottom: 0.6rem;
+		}
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #212121;
+			color: #fcfcfc;
+    }
+
+		.banner{
+			width: 100%;
+			margin-bottom: 1rem;
+		}
+
+	@media only screen and (max-width: 600px) {
+	.container {
+		padding: 1rem;
+		font-size: 0.9rem;
+  }
+
+  .header {
+    font-size: .9rem;
+    padding: .7rem;
+  }
+
+  .content, .footer {
+    padding: .7rem;
+  }
+}
+
+  </style>

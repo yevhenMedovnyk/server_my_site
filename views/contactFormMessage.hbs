@@ -4,11 +4,23 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Document</title>
+    {{> styles }}
+		<style>
+			.title{
+				font-size: 1.5rem;
+			}
+		</style>
 </head>
+
 <body>
-	<h1>Contact Form Message</h1>
-	<p>Name: {{name}}</p>
-	<p>Email: {{email}}</p>
-	<p>Message: {{message}}</p>
+  <div class="container">
+    <h1  class="title">Contact Form Message</h1>
+    <div class="content">
+      <p><strong>Ім’я:</strong> {{name}}</p>
+      <p><strong>Email:</strong> <a href="mailto:{{email}}">{{email}}</a></p>
+      <p><strong>Повідомлення:</strong></p>
+      <p>{{message}}</p>
+    </div>
+  </div>
 </body>
 </html>
