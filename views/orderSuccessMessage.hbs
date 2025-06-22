@@ -8,10 +8,10 @@
 </head>
 <body>
     <div class="container">
-        <div class="header">🎉 Дякуємо за ваше замовлення!</div>
+        <div class="header">Ваше замовлення {{order.basket_id}} було прийнято!</div>
         <div class="content">
             <p>Привіт, <strong>{{order.mainClientInfo.first_name}}</strong>!</p>
-            <p>Ваше замовлення було успішно оформлене. Ось деталі вашого замовлення:</p>
+            <p>Дякуємо за ваше замовлення:</p>
             
             <div class="order-details">
                 <table>
@@ -36,13 +36,14 @@
 
             <p><strong>Загальна сума:</strong> {{order.amount}} грн</p>
 
-            <p>Ви можете відстежувати своє замовлення або зв’язатися з нами у разі питань.</p>
-            <a href="https://yourshop.com/orders/{{order.orderId}}" class="btn">Переглянути замовлення</a>
-        </div>
-        <div class="footer">
-            <p>З повагою, <br> Команда <strong>Вашого магазину</strong></p>
-            <p>📞 Телефон: +380 (XX) XXX-XX-XX | 📧 Email: support@yourshop.com</p>
-        </div>
+            <p>Ваше замовлення буде передано до служби доставки протягом трьох робочих днів. Після цього ви отримаєте повідомлення з номером ТТН.</p>
     </div>
+    <div class="footer">
+				<a href="https://yourshop.com/orders/{{order.orderId}}" class="store-link">YM | FineArt Prints</a>
+			</strong></p>
+			<img class="banner" src="https://res.cloudinary.com/yevhenmedovnyk/image/upload/v1750586296/banner_1200_kicpot.webp" alt="banner">
+      <p>📞 Телефон: +380 (XX) XXX-XX-XX | 📧 Email:<a href="mailto:support@yourshop.com"> support@yourshop.com</a></p>
+    </div>
+  </div>
 </body>
 </html>

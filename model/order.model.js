@@ -34,6 +34,7 @@ const orderSchema = new Schema({
 	amount: { type: Number, required: true },
 	clientCallback: { type: Boolean, required: false },
 	comment: { type: String, required: false },
+	tracking_number: {type: Number, required: false}
 });
 
 module.exports = mongoose.model('Order', orderSchema);
