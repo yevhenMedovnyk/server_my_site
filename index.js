@@ -16,14 +16,16 @@ const userRoutes = require('./routes/userRoutes.js');
 const albumRoutes = require('./routes/albumRoutes.js');
 const imageRoutes = require('./routes/imageRoutes.js');
 const storeRoutes = require('./routes/storeRoutes.js');
-const orderRoutes = require('./routes/checkoutRoutes.js');
+const checkoutRoutes = require('./routes/checkoutRoutes.js');
+const orderRoutes = require('./routes/orderRoutes.js');
 
 app.use('/mail', mailRoutes);
 app.use('/albums', albumRoutes);
 app.use('/images', imageRoutes);
 app.use('/user', userRoutes);
 app.use('/store', storeRoutes);
-app.use('/checkout', orderRoutes);
+app.use('/checkout', checkoutRoutes);
+app.use('/orders', orderRoutes);
 
 
 // Connect to MongoDB
