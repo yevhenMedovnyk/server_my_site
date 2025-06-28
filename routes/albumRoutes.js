@@ -3,6 +3,7 @@ const router = express.Router();
 const Image_album = require('../model/image_album.model.js');
 const Image = require('../model/image.model.js');
 const cloudinary = require('../cloudinaryConfig');
+const verifyAdmin = require('../middlewares/verifyAdmin.cjs');
 
 const { getPublicIdFromUrl } = require('../utils/getPublicIdFromUrl.js');
 
@@ -41,7 +42,7 @@ router.get('/album', async (req, res) => {
 });
 
 // Створити новий альбом
-router.post('/create-album', async (req, res) => {
+router.post('/create-album', verifyAdmin, async (req, res) => {
   const body = req.body;
 
   try {
@@ -80,7 +81,7 @@ router.put('/update-album', async (req, res) => {
 });
 
 
-router.post('/delete-album', async (req, res) => {
+router.post('/delete-album', verifyAdmin, async (req, res) => {
   const albumId = req.query.albumId;
 
   try {
