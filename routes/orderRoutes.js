@@ -23,4 +23,18 @@ router.get('/get-order', async(req, res) => {
 	}
 })
 
+// Додати/редагувати ТТН до замовлення
+router.put('/update-order', async(req, res) => {
+	const order_id = req.body.order_id;
+	const tracking_number = req.body.tracking_number;
+	try {
+		const order = await Order.findById(order_id);
+		order.tracking_number = tracking_number;
+		await order.save();
+		res.json(order);
+	} catch (error) {
+		res.status(500).json({ message: "Server error: " + error.message });
+	}
+})
+
 module.exports = router;

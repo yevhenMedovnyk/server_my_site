@@ -35,10 +35,10 @@ router.post('/', async (req, res) => {
     "card"
   ],
   "dlv_pay_merchant": false,
-  "callback_url": "https://b5d0-46-96-80-14.ngrok-free.app/checkout/callback",
+  "callback_url": "https://795b-46-96-53-123.ngrok-free.app/checkout/callback",
 	"return_url": "http://localhost:5173/order-status",
 	"hold": false,
-	"fl_recall": true
+	"fl_recall": false
 		}
 		
 		

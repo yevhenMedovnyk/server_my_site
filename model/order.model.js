@@ -24,6 +24,7 @@ const deliveryRecipientInfo = new Schema({
 
 const orderSchema = new Schema({
 	orderId: { type: String, required: true },
+	basket_id: { type: String, required: true },
 	generalStatus: { type: String, required: true },
 	dateCreate: { type: String, required: true },
 	delivery_method_desc: { type: String, required: true },
