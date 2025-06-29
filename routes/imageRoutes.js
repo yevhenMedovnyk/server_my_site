@@ -4,6 +4,7 @@ const multer = require('multer');
 const cloudinary = require('../cloudinaryConfig');
 const Image = require('../model/image.model.js');
 const { getPublicIdFromUrl } = require('../utils/getPublicIdFromUrl.js');
+const verifyAdmin = require('../middlewares/verifyAdmin.cjs');
 
 
 const storage = multer.memoryStorage();
@@ -11,7 +12,7 @@ const upload = multer({ storage });
 
 //Завантажити зображення
 
-router.post('/upload-image', upload.array('images'), async (req, res) => {
+router.post('/upload-image', verifyAdmin, upload.array('images'), async (req, res) => {
   const files = req.files;
 	const albumId = req.body.album_id;
 
@@ -94,7 +95,7 @@ router.get('/image-by-id', async (req, res) => {
 //  }
 //});
 
-router.delete('/delete-image', async (req, res) => {
+router.delete('/delete-image', verifyAdmin, async (req, res) => {
   const imageId = req.query.imageId;
 
   try {
@@ -119,7 +120,7 @@ router.delete('/delete-image', async (req, res) => {
 
 
 //Додати опис зображення
-router.post('/add-image-description', async (req, res) => {
+router.post('/add-image-description', verifyAdmin, async (req, res) => {
 	const imageId = req.body.imageId;
 	const description = req.body.description;
 	try {

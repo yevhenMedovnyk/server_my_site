@@ -54,7 +54,7 @@ router.post('/create-album', verifyAdmin, async (req, res) => {
 });
 
 // Оновити альбом
-router.put('/update-album', async (req, res) => {
+router.put('/update-album', verifyAdmin, async (req, res) => {
   const { albumId, name, category, cover_img } = req.body;
 
   try {

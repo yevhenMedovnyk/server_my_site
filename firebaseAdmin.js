@@ -1,4 +1,3 @@
-// firebaseAdmin.ts
 const admin = require('firebase-admin');
 const { set } = require('mongoose');
 
