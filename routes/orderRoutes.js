@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Order = require('../model/order.model.js');
+const verifyAdmin = require('../middlewares/verifyAdmin.cjs');
 
 // Отримати всі замовлення з БД
 router.get('/get-orders', async(req, res) => {
@@ -24,7 +25,7 @@ router.get('/get-order', async(req, res) => {
 })
 
 // Додати/редагувати ТТН до замовлення
-router.put('/update-order', async(req, res) => {
+router.put('/update-order', verifyAdmin, async(req, res) => {
 	const order_id = req.body.order_id;
 	const tracking_number = req.body.tracking_number;
 	try {
