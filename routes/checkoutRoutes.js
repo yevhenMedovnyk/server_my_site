@@ -8,38 +8,38 @@ const updateOrderStatus = require('../utils/updateOrderStatus.js');
 const { MONO_CHECKOUT_URL } = require('../constants.js');
 
 
-
 //Mono checkout
 router.post('/', async (req, res) => {
 	const body = req.body;
+
+	const products = body.products.map((product) => ({
+		name: product.name,
+		cnt: product.quantity_in_cart,
+		price: product.price,
+		code_product: product.code_product,
+		//code_checkbox: "3315974",
+		product_img_src: product.imgs[0].img
+	}));
+
 	try { 
 		const checkoutOrderBody = {
-  "order_ref": body.order_ref,
-  "amount": body.amount,
-  "ccy": 980,
-  "count": 1,
-  "products": [
-    {
-      "name": body.name,
-      "cnt": 1,
-      "price": body.price,
-      "code_product": body.code_product,
-      //"code_checkbox": "3315974",
-      "product_img_src": body.img
-    }
-  ],
-  "dlv_method_list": [
-    "np_brnm"
-  ],
-  "payment_method_list": [
+  	"order_ref": body.order_ref,
+  	"amount": body.amount,
+  	"ccy": 980,
+		"count": body.count,
+		"products": products,
+  	"dlv_method_list": [
+    	"np_brnm"
+ 	 ],
+  	"payment_method_list": [
     "card"
-  ],
-  "dlv_pay_merchant": false,
-  "callback_url": "https://795b-46-96-53-123.ngrok-free.app/checkout/callback",
-	"return_url": "http://localhost:5173/order-status",
-	"hold": false,
-	"fl_recall": false
-		}
+  	],
+  	"dlv_pay_merchant": false,
+  	"callback_url": "https://0a5e499bc65a.ngrok-free.app/checkout/callback",
+		"return_url": "http://localhost:5173/order-status",
+		"hold": false,
+		"fl_recall": false
+			}
 		
 		
 		const newOrder = await axios.post(MONO_CHECKOUT_URL + "order", checkoutOrderBody , {
