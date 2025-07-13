@@ -1,11 +1,15 @@
 <style>
+
+	*, *::before, *::after {
+  box-sizing: border-box;
+}
+
   html, body {
     margin: 0;
     padding: 0;
     background-color: #f4f4f4;
     font-family: Arial, sans-serif;
     width: 100%;
-    box-sizing: border-box;
   }
 
   body {
@@ -13,6 +17,10 @@
     justify-content: center;
     padding: 1rem;
   }
+
+	p{
+		margin: 0.5rem 0;
+	}
 
   a {
     text-decoration: none;
@@ -35,14 +43,12 @@
     text-align: center;
     padding: 0.9375rem; /* 15px */
     font-size: 1.25rem; /* 20px */
-    border-radius: 0.5rem; /* 8px 
-    margin-bottom: 0.8rem;
+    border-radius: 0.5rem;
   }
 
-  .content {
-    padding: 1.25rem; /* 20px */
-    color: #333;
-  }
+	.content {
+		color: #333;
+	}
 
   .order-details {
     margin-top: 0.9375rem; /* 15px */

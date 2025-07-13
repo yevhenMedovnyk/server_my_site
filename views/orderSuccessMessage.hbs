@@ -1,48 +1,69 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Замовлення підтверджено</title>
-    {{> styles }}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Успішне замовлення</title>
+  {{> styles }}
 </head>
 <body>
-    <div class="container">
-        <div class="header">Ваше замовлення {{order.basket_id}} було прийнято!</div>
-        <div class="content">
-            <p>Привіт, <strong>{{order.mainClientInfo.first_name}}</strong>!</p>
-            <p>Дякуємо за ваше замовлення:</p>
-            
-            <div class="order-details">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Товар</th>
-                            <th>Кількість</th>
-                            <th>Ціна</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {{#each order.products}}
-                        <tr>
-                            <td>{{this.name}}</td>
-                            <td>{{this.cnt}}</td>
-                            <td>{{this.price}} грн</td>
-                        </tr>
-                        {{/each}}
-                    </tbody>
-                </table>
-            </div>
-
-            <p><strong>Загальна сума:</strong> {{order.amount}} грн</p>
-
-            <p>Ваше замовлення буде передано до служби доставки протягом трьох робочих днів. Після цього ви отримаєте повідомлення з номером ТТН.</p>
+  <div class="container">
+    <div class="header">
+      Замовлення №{{order.basket_id}}
     </div>
+
+    <div class="content">
+      <p>Привіт, <strong>{{order.mainClientInfo.first_name}}</strong>!</p>
+      <p>Дякуємо за ваше замовлення:</p>
+
+      <div class="order-details">
+        <table>
+          <thead>
+            <tr>
+              <th>Товар</th>
+              <th>Кількість</th>
+              <th>Сума</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each order.products}}
+            <tr>
+              <td>{{this.name}}</td>
+              <td>{{this.cnt}}</td>
+              <td>{{multiply this.price this.cnt}} грн</td>
+            </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+
+      <p><strong>Загальна сума:</strong> {{order.amount}} грн</p>
+      <p><strong>Доставка:</strong> {{order.delivery_method_desc}}, {{order.delivery_branch_address}}</p>
+
+      <p>
+        Ваше замовлення буде передано до служби доставки протягом трьох робочих днів.
+        Після цього ви отримаєте повідомлення з номером ТТН.
+      </p>
+    </div>
+
     <div class="footer">
-				<a href="https://yourshop.com/orders/{{order.orderId}}" class="store-link">YM | FineArt Prints</a>
-			</strong></p>
-			<img class="banner" src="https://res.cloudinary.com/yevhenmedovnyk/image/upload/v1750586296/banner_1200_kicpot.webp" alt="banner">
-      <p>📞 Телефон: +380 (XX) XXX-XX-XX | 📧 Email:<a href="mailto:support@yourshop.com"> support@yourshop.com</a></p>
+      <a
+        href="https://yourshop.com/orders/{{order.orderId}}"
+        class="store-link"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        YM | FineArt Prints
+      </a>
+      <img
+        class="banner"
+        src="https://res.cloudinary.com/yevhenmedovnyk/image/upload/v1750586296/banner_1200_kicpot.webp"
+        alt="banner"
+      />
+      <p>
+        📞 Телефон: +380 (XX) XXX-XX-XX |
+        📧 Email: <a href="mailto:support@yourshop.com">support@yourshop.com</a>
+      </p>
     </div>
   </div>
 </body>

@@ -26,11 +26,14 @@ transporter.use(
             runtimeOptions: {
                 allowProtoPropertiesByDefault: true,
                 allowProtoMethodsByDefault: true,
-					},
+				},
+						helpers: {
+							multiply: (a, b) => a * b
+						},
         },
        		 viewPath: path.join(__dirname, '../views'),
         	extName: '.hbs',
-    })
+		})
 );
 
 /**
@@ -63,9 +66,11 @@ const sendMail = async ({ email, name, message , subject = 'YM | Contact Form Me
             to: emailTo || process.env.GMAIL_USER,
             subject,
             template: templateName,
-						context: templateName === 'contactFormMessage' ?
-							{ name: cleanName, email: cleanEmail, message: cleanMessage }
-							: { ...context },
+						context: {
+								...(templateName === 'contactFormMessage'
+								? { name: cleanName, email: cleanEmail, message: cleanMessage }
+								: context),
+},
 				};
 
         // 🔹 Відправлення email
