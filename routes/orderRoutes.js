@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Order = require('../model/order.model.js');
 const verifyAdmin = require('../middlewares/verifyAdmin.cjs');
+const sendMail = require('../utils/sendMail.js');
 
 // Отримати всі замовлення з БД
 router.get('/get-orders', async(req, res) => {
@@ -33,6 +34,15 @@ router.put('/update-order', verifyAdmin, async(req, res) => {
 		order.tracking_number = tracking_number;
 		await order.save();
 		res.json(order);
+		sendMail({
+			emailTo: order.mainClientInfo.email,
+			name: order.mainClientInfo.first_name,
+			subject: 'Ваше замовлення відправлено',
+			templateName: 'addTrackingNumberMessage',
+			context: {
+				order
+			}
+		})
 	} catch (error) {
 		res.status(500).json({ message: "Server error: " + error.message });
 	}
