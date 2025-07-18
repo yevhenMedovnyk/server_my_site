@@ -19,6 +19,11 @@ const image_albumSchema = new Schema({
 	category: {
 		type: String,
 		required: true
+	},
+	slug: {
+		type: String,
+		required: true,
+		unique: true
 	}
 });
 module.exports = mongoose.model('image_album', image_albumSchema);

@@ -6,6 +6,7 @@ const cloudinary = require('../cloudinaryConfig');
 const verifyAdmin = require('../middlewares/verifyAdmin.cjs');
 
 const { getPublicIdFromUrl } = require('../utils/getPublicIdFromUrl.js');
+const { default: slugify } = require('slugify');
 
 
 // Отримати всі альбоми
@@ -43,10 +44,24 @@ router.get('/album', async (req, res) => {
 
 // Створити новий альбом
 router.post('/create-album', verifyAdmin, async (req, res) => {
-  const body = req.body;
+	const body = req.body;
+	const nameEn = body?.name?.en;
+
+  if (!nameEn) {
+    return res.status(400).json({ message: "Album name is required" });
+  }
+
+  let baseSlug = slugify(nameEn, { lower: true, strict: true });
+  let slug = baseSlug;
+  let counter = 1;
+
+  // Перевіряємо унікальність slug
+  while (await Image_album.findOne({ slug })) {
+    slug = `${baseSlug}-${counter++}`;
+  }
 
   try {
-    const newAlbum = await Image_album.create(body);
+    const newAlbum = await Image_album.create({...body, "slug": slug});
     res.status(201).json(newAlbum);
   } catch (error) {
     res.status(400).json({message : error.message});
@@ -55,7 +70,16 @@ router.post('/create-album', verifyAdmin, async (req, res) => {
 
 // Оновити альбом
 router.put('/update-album', verifyAdmin, async (req, res) => {
-  const { albumId, name, category, cover_img } = req.body;
+	const { albumId, name, category, cover_img} = req.body;
+	const nameEn = name?.en;
+	if (!nameEn) return res.status(400).json({ message: "Album name is required" });
+	let baseSlug = slugify(nameEn, { lower: true, strict: true });
+	let slug = baseSlug;
+	let counter = 1;
+
+	while (await Image_album.findOne({ slug, _id: { $ne: albumId } })) {
+  	slug = `${baseSlug}-${counter++}`;
+	}
 
   try {
     if (!albumId) {
@@ -68,9 +92,10 @@ router.put('/update-album', verifyAdmin, async (req, res) => {
       return res.status(404).json({ message: "Album not found" });
     }
 
-    album.name = name || album.name;
-    album.category = category || album.category;
-    album.cover_img = cover_img || album.cover_img;
+    album.name = name ?? album.name;
+		album.category = category ?? album.category;
+		album.cover_img = cover_img ?? album.cover_img;
+		album.slug = slug;
 
     await album.save();
 

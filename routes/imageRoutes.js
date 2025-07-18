@@ -15,6 +15,7 @@ const upload = multer({ storage });
 router.post('/upload-image', verifyAdmin, upload.array('images'), async (req, res) => {
   const files = req.files;
 	const albumId = req.body.album_id;
+	const albumSlug = req.body.album_slug;
 
   try {
     const uploads = await Promise.all(
@@ -27,7 +28,8 @@ router.post('/upload-image', verifyAdmin, upload.array('images'), async (req, re
         const image = new Image({
           name: file.originalname,
           img: uploaded.secure_url,
-          album_id: albumId,
+					album_id: albumId,
+					album_slug: albumSlug,
           width: uploaded.width,
           height: uploaded.height,
         });
